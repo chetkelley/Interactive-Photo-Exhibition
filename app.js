@@ -66,5 +66,5 @@ app.post('/photo/:id', (req, res) => {
   });
 });
 
-app.listen(80, () => console.log('App running on http://<pi-ip>/photo/1 etc.'));
+app.listen(3000, () => console.log('Server started on port 3000'));
 
