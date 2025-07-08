@@ -1,15 +1,40 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Photo Description</title>
-  </head>
-  <body>
-    <h1>Please enter a description of this photo</h1>
-    <form method="POST">
-      <input name="text" placeholder="Enter description" required>
-      <button type="submit">Submit</button>
-    </form>
-  </body>
-</html>
+<head>
+  <meta charset="UTF-8">
+  <title>Describe This Photo</title>
+  <style>
+    body {
+      font-size: 1.8em;
+      font-family: sans-serif;
+      max-width: 700px;
+      margin: 2em auto;
+      padding: 1em;
+      line-height: 1.5;
+    }
 
+    textarea {
+      font-size: 2.0em;
+      padding: 0.75em;
+      width: 100%;
+      height: 180px;
+      box-sizing: border-box;
+      resize: vertical;
+    }
+
+    button {
+      font-size: 2.5em;
+      padding: 0.5em 1.2em;
+      margin-top: 1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>What do you see in this photo?</h1>
+  <form method="POST">
+    <textarea name="text" placeholder="Enter description here..." required></textarea>
+    <br>
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>
