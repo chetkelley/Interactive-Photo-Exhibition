@@ -1,4 +1,3 @@
-
 # Interactive Photo Exhibition
 
 This is a lightweight Node.js web app designed for interactive photo exhibitions. Visitors scan a QR code next to a photo, submit their own description of what they see, and then view the photo's title along with descriptions submitted by other visitors.
@@ -7,16 +6,18 @@ This is a lightweight Node.js web app designed for interactive photo exhibitions
 - No user accounts (anonymous contributions)
 - Visitors must enter a description before seeing others' impressions
 - Descriptions are shown instantly after submission (their own at the top)
-- Titles + descriptions are stored in a local SQLite database
-- Designed to run on a Raspberry Pi (e.g. Raspberry Pi 5)
-- Can work on local Wi-Fi without Internet access
+- Titles + descriptions are stored in a PostgreSQL database
+- Persistent session storage in PostgreSQL for better scalability
+- Sanitizes user input to prevent HTML/script injection
+- Designed to run on a Raspberry Pi or cloud platforms (Railway, VPS, etc.)
+- Supports environment variables for configuration
 - Easily generate QR codes linking to each photo
 
 ---
 
 ## 🚀 **How It Works**
-- Each photo has a record in the SQLite database with a unique `id` and title.
-- QR codes link to URLs like `http://<pi-ip>/photo/1`, where `1` is the photo's database ID.
+- Each photo has a record in the PostgreSQL database with a unique `id` and title.
+- QR codes link to URLs like `http://<domain-or-ip>/photo/1`, where `1` is the photo's database ID.
 - When visitors scan the code, they’re prompted to submit a description.
 - After submitting, they see:
   - The photo’s title
@@ -27,99 +28,99 @@ This is a lightweight Node.js web app designed for interactive photo exhibitions
 ## 📦 **Installation Instructions**
 
 ### 1️⃣ **Prerequisites**
-- Raspberry Pi (or other Linux server)
 - Node.js + npm installed  
-- SQLite3 installed  
-- `qrencode` installed (for generating QR codes)
+- PostgreSQL database (local or hosted, e.g., Railway PostgreSQL plugin)  
+- `qrencode` installed (for generating QR codes)  
+- Create a `.env` file based on `.env.example` (see below)
 
 ### 2️⃣ **Clone this repo**
 ```bash
-git clone https://github.com/chetkelley/Interactive-Photo-Exhibition.git
-cd Interactive-Photo-Exhibition
-```
+  git clone https://github.com/chetkelley/Interactive-Photo-Exhibition.git
+  cd Interactive-Photo-Exhibition
 
-### 3️⃣ **Install dependencies**
-```bash
-npm install
-```
+3️⃣ Install dependencies
+  npm install
 
-### 4️⃣ **Start the app**
-```bash
-node app.js
-```
-➡ The app will listen on `http://<pi-ip>:3000/`
+4️⃣ Create database schema
 
-### 5️⃣ **Add photo titles**
-Create a file `titles.txt` with one photo title per line:
-```
-Sunset Over Berlin
-City Park at Dawn
-Old Town Square
-```
-Run:
-```bash
-node add_titles.js
-```
-➡ This will insert the titles into the database and print their assigned IDs.
+Run the SQL commands in schema.sql (included) on your PostgreSQL database to create the necessary tables.
+	•	On Railway: use their SQL editor to run schema.sql once.
+	•	On local PostgreSQL:
+  psql -d your_database -f schema.sql
 
-### 6️⃣ **Generate QR codes**
-For each photo ID:
-```bash
-qrencode -o photo_1.png "http://<pi-ip>:3000/photo/1"
-qrencode -o photo_2.png "http://<pi-ip>:3000/photo/2"
-```
-➡ Replace `<pi-ip>` with your Pi’s actual IP address.
+5️⃣ Configure environment variables 
+  Create a .env file in the project root (do not commit this file) with content like:
+  DATABASE_URL=postgresql://username:password@host:port/database
+  SESSION_SECRET=your_super_secret_session_key
+  PGSSLMODE=disable # optional, if your DB does not require SSL
+  PORT=3000
 
-When you get a static IP for the venue, simply regenerate the QR codes.
+6️⃣ Start the app
+  npm start
 
----
+➡ The app will listen on the port specified in PORT or default to 3000.
 
-## ⚙️ **Project Structure**
-```
+7️⃣ Add photo titles
+
+Use a script or SQL to insert photo titles into the photo table (no automated script included now, but you can insert manually):
+  INSERT INTO photo (title) VALUES ('Sunset Over Berlin');
+  INSERT INTO photo (title) VALUES ('City Park at Dawn');
+
+8️⃣ Generate QR codes
+  For each photo ID:
+  qrencode -o photo_1.png "http://<domain-or-ip>:3000/photo/1"
+  qrencode -o photo_2.png "http://<domain-or-ip>:3000/photo/2"
+
+➡ Replace <domain-or-ip> with your actual hostname or IP address.
+
+⚙️ Project Structure
 .
 ├── app.js               # Main server code
-├── add_titles.js        # Helper to bulk-insert photo titles
-├── data.db              # SQLite database (excluded via .gitignore)
+├── schema.sql           # PostgreSQL schema file (tables and constraints)
 ├── views/               # EJS templates
 ├── public/              # Static files (optional)
 ├── package.json         # Node.js dependencies
-├── .gitignore           # Files and folders to exclude from git
-```
+├── .env.example         # Sample environment variable config
+├── .gitignore           # Files and folders excluded from git
 
----
+📝 Deployment Notes
+	•	For Raspberry Pi local deployment, install and configure PostgreSQL or use a managed PostgreSQL.
+	•	For cloud deployment (Railway, VPS), set environment variables in your hosting dashboard.
+	•	Use the schema.sql file to initialize your database.
+	•	Persistent sessions stored in PostgreSQL avoid session loss on server restart.
+	•	The app listens on port specified by PORT environment variable or 3000 by default.
+	•	Remember to regenerate QR codes if the domain or IP changes.
 
-## 📝 **Deployment Notes**
-- You can run this app on a Raspberry Pi without Internet — just provide local Wi-Fi access.
-- To start the app on boot, set up a systemd service (ask if you want help creating this).
-- Remember to regenerate QR codes if the IP address changes.
-- The app listens on port 3000 (adjustable in `app.js`).
+⸻
 
----
+🔒 .gitignore
 
-## 🔒 **.gitignore**
 This repo excludes:
-- `data.db` — your live database (keeps visitor input private)
-- `node_modules/` — dependencies are installed on deploy
-- logs, temp files
+	•	.env — your environment secrets
+	•	node_modules/ — dependencies are installed on deploy
+	•	logs, temp files
 
----
+⸻
 
-## 📌 **Known Limitations**
-- No authentication (by design — anonymous usage)
-- All data is stored locally in `data.db`
-- No built-in export for descriptions (can be added!)
+📌 Known Limitations
+	•	No authentication (anonymous usage by design)
+	•	No built-in export for descriptions (can be added!)
+	•	Photo title adding is manual or via SQL (no script included)
 
----
+⸻
 
-## 🤝 **Contributing**
+🤝 Contributing
+
 Feel free to fork, adapt, or suggest improvements via pull requests.
 
----
+⸻
 
-## 📜 **License**
+📜 License
+
 MIT License (or add your preferred license)
 
----
+⸻
 
-## 🙏 **Credits**
-Built for a photo exhibit at a public library by [Chet Kelley](https://github.com/chetkelley) with guidance from OpenAI’s ChatGPT.
+🙏 Credits
+
+Built for a photo exhibit at a public library by Chet Kelley with guidance from OpenAI’s ChatGPT.
