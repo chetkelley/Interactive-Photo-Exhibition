@@ -12,7 +12,7 @@ const app = express();
 // Database connection
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.PGSSLMODE === 'disable' ? false : { rejectUnauthorized: false }
+  ssl: false, //process.env.PGSSLMODE === 'disable' ? false : { rejectUnauthorized: false }
 });
 
 app.set('view engine', 'ejs');

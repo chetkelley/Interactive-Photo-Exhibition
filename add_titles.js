@@ -1,17 +1,15 @@
+require('dotenv').config();
 const fs = require('fs');
 const { Pool } = require('pg');
 
-// Adjust connection details as needed or use DATABASE_URL from .env
 const pool = new Pool({
-  user: 'your_pg_username',
-  host: 'localhost',
-  database: 'your_database_name',
-  password: 'your_pg_password',
-  port: 5432,
+  connectionString: process.env.DATABASE_URL,
 });
 
 (async () => {
-  const titles = fs.readFileSync('titles.txt', 'utf-8').split('\n').filter(Boolean);
+  const titles = fs.readFileSync('titles.txt', 'utf-8')
+    .split('\n')
+    .filter(Boolean);
 
   for (const title of titles) {
     try {
