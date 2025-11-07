@@ -12,8 +12,22 @@ const app = express();
 // Database connection
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: false, //process.env.PGSSLMODE === 'disable' ? false : { rejectUnauthorized: false }
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
+
+//Session storage
+app.use(session({
+  store: new pgSession({
+    pool: pool,
+    tableName: 'session'
+  }),
+  secret: process.env.SESSION_SECRET || 'fallback-secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 12 * 60 * 60 * 1000 }
+}));
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
