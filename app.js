@@ -97,6 +97,17 @@ app.post('/photo/:id', async (req, res) => {
   }
 });
 
+// Debug route to test database connectivity
+app.get('/test-db', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT NOW()');
+    res.send(`Database connected successfully! Server time: ${result.rows[0].now}`);
+  } catch (err) {
+    console.error('Database connection failed:', err);
+    res.status(500).send(`Database error: ${err.message}`);
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
