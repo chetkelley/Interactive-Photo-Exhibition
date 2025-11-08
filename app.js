@@ -19,23 +19,7 @@ const pool = new Pool({
   }
 });
 
-//Session storage
-app.use(session({
-  store: new pgSession({
-    pool: pool,
-    tableName: 'session'
-  }),
-  secret: process.env.SESSION_SECRET || 'fallback-secret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { maxAge: 12 * 60 * 60 * 1000 }
-}));
-
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// Persistent sessions in PostgreSQL
+// Session storage (only once)
 app.use(session({
   store: new pgSession({
     pool: pool,
@@ -46,6 +30,10 @@ app.use(session({
   saveUninitialized: false,
   cookie: { maxAge: 12 * 60 * 60 * 1000 } // 12 hours
 }));
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Health check / home route
 app.get('/', (req, res) => {
@@ -116,6 +104,6 @@ app.get('/test-db', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ Server started on port ${PORT}`);
 });
