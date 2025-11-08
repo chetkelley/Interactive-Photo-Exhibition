@@ -47,6 +47,11 @@ app.use(session({
   cookie: { maxAge: 12 * 60 * 60 * 1000 } // 12 hours
 }));
 
+// Health check / home route
+app.get('/', (req, res) => {
+  res.send('Interactive Photo Exhibition app is running.');
+});
+
 // Routes
 app.get('/photo/:id', async (req, res) => {
   const photoId = req.params.id;
