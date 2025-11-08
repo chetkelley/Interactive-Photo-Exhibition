@@ -14,9 +14,7 @@ console.log('🔍 DATABASE_URL =', process.env.DATABASE_URL);
 // Database connection
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  ssl: false // Internal Railway Postgres does not need SSL
 });
 
 // Session storage (only once)
