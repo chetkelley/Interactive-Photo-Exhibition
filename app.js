@@ -9,6 +9,8 @@ const sanitizeHtml = require('sanitize-html');
 
 const app = express();
 
+console.log('🔍 DATABASE_URL =', process.env.DATABASE_URL);
+
 // Database connection
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
