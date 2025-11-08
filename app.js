@@ -9,6 +9,7 @@ const sanitizeHtml = require('sanitize-html');
 
 const app = express();
 
+// Debug: print DATABASE_URL
 console.log('🔍 DATABASE_URL =', process.env.DATABASE_URL);
 
 // Database connection
@@ -17,7 +18,13 @@ const pool = new Pool({
   ssl: false // Internal Railway Postgres does not need SSL
 });
 
-// Session storage (only once)
+// Handle unexpected database errors
+pool.on('error', (err) => {
+  console.error('Unexpected error on idle client', err);
+  process.exit(-1); // Exit process if DB fails
+});
+
+// Session storage in PostgreSQL
 app.use(session({
   store: new pgSession({
     pool: pool,
@@ -29,6 +36,7 @@ app.use(session({
   cookie: { maxAge: 12 * 60 * 60 * 1000 } // 12 hours
 }));
 
+// Set up view engine and static files
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -61,7 +69,7 @@ app.get('/photo/:id', async (req, res) => {
       res.render('photo_form', { photo });
     }
   } catch (err) {
-    console.error(err);
+    console.error('Database error on GET /photo/:id', err);
     res.status(500).send('Database error');
   }
 });
@@ -72,10 +80,7 @@ app.post('/photo/:id', async (req, res) => {
   if (!text) return res.redirect(`/photo/${photoId}`);
 
   // Sanitize user input
-  text = sanitizeHtml(text, {
-    allowedTags: [],
-    allowedAttributes: {}
-  });
+  text = sanitizeHtml(text, { allowedTags: [], allowedAttributes: {} });
 
   try {
     await pool.query(
@@ -85,7 +90,7 @@ app.post('/photo/:id', async (req, res) => {
     req.session[`photo_${photoId}_submitted`] = text;
     res.redirect(`/photo/${photoId}`);
   } catch (err) {
-    console.error(err);
+    console.error('Database error on POST /photo/:id', err);
     res.status(500).send('Database error');
   }
 });
@@ -101,7 +106,9 @@ app.get('/test-db', async (req, res) => {
   }
 });
 
+// Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`✅ Server started on port ${PORT}`);
+  console.log('✅ Server ready and listening...');
 });
