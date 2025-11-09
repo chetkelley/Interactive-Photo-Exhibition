@@ -24,6 +24,7 @@ pool.on('error', (err) => {
   process.exit(-1); // Exit process if DB fails
 });
 
+/*
 // Session storage in PostgreSQL
 app.use(session({
   store: new pgSession({
@@ -35,6 +36,7 @@ app.use(session({
   saveUninitialized: false,
   cookie: { maxAge: 12 * 60 * 60 * 1000 } // 12 hours
 }));
+*/
 
 // Set up view engine and static files
 app.set('view engine', 'ejs');
