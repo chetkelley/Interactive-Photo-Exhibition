@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const { Pool, Client } = require('pg').native;
+const { Pool } = require('pg').native;
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const path = require('path');
