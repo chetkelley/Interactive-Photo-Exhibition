@@ -59,6 +59,12 @@ app.get('/photo/:id', async (req, res) => {
 
     const photo = photoResult.rows[0];
 
+    // ✅ Safeguard if express-session is disabled
+    if (!req.session) {
+      console.warn('⚠️ req.session is undefined — skipping session logic');
+      return res.render('photo_form', { photo });
+    }
+
     if (req.session[submittedKey]) {
       const descResult = await pool.query(
         'SELECT text FROM description WHERE photo_id = $1 ORDER BY timestamp DESC',
