@@ -15,6 +15,14 @@ const pool = new Pool({
   ssl: false, // Internal Railway Postgres does not need SSL
 });
 
+// Log connection info for debugging
+try {
+  const dbUrl = new URL(process.env.DATABASE_URL);
+  console.log(`🔍 Attempting DB connection to host: ${dbUrl.hostname}, port: ${dbUrl.port}, database: ${dbUrl.pathname.slice(1)}`);
+} catch (err) {
+  console.error('❌ Failed to parse DATABASE_URL', err);
+}
+
 // Log pool errors globally
 pool.on('error', (err) => {
   console.error('Unexpected error on idle client', err);
