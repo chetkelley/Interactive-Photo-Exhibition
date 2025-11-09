@@ -84,6 +84,6 @@ app.post('/photo/:id', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });
