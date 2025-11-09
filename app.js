@@ -9,6 +9,10 @@ const sanitizeHtml = require('sanitize-html');
 
 const app = express();
 
+app.get('/', (req, res) => {
+  res.status(200).send('Interactive Photo Exhibition app is running.');
+});
+
 // Database connection
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
