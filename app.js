@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const { Pool } = require('pg');
+const { Pool, Client } = require('pg').native;
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const path = require('path');
@@ -24,7 +24,7 @@ pool.on('error', (err) => {
   process.exit(-1); // Exit process if DB fails
 });
 
-/*
+
 // Session storage in PostgreSQL
 app.use(session({
   store: new pgSession({
@@ -36,7 +36,7 @@ app.use(session({
   saveUninitialized: false,
   cookie: { maxAge: 12 * 60 * 60 * 1000 } // 12 hours
 }));
-*/
+
 
 // Set up view engine and static files
 app.set('view engine', 'ejs');
