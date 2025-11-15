@@ -67,7 +67,7 @@ app.get('/photo/:id', async (req, res) => {
 app.get('/admin/descriptions', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM description ORDER BY id DESC');
-    res.render('admin_descriptions', { description: result.rows });
+    res.render('admin_descriptions', { descriptions: result.rows });
   } catch (err) {
     console.error('Error loading descriptions:', err);
     res.status(500).send("Error loading descriptions");
