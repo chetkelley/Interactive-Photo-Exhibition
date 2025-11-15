@@ -17,7 +17,7 @@ const pool = new Pool({
       const url = `${process.env.APP_URL}/photo/${photoId}`; // e.g., https://myapp.example.com/photo/1
       const filePath = path.join(__dirname, `photo_${photoId}.png`);
       
-      await QRCode.toFile(filePath, url, { width: 300 });
+      await QRCode.toFile(filePath, url, { width: 1200 });
       console.log(`Generated QR for "${row.title}" at ${filePath}`);
     }
   } catch (err) {
