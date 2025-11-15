@@ -66,11 +66,18 @@ app.get('/photo/:id', async (req, res) => {
 //admin view so I can see all entries
 app.get('/admin/descriptions', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM description ORDER BY id DESC');
-    res.render('admin_descriptions', { descriptions: result.rows });
+    const result = await pool.query(`
+      SELECT d.id, d.text, d.timestamp, p.title AS photo_title
+      FROM description d
+      JOIN photo p ON d.photo_id = p.id
+      ORDER BY d.timestamp DESC
+    `);
+
+    const descriptions = result.rows;
+    res.render('admin_descriptions', { descriptions });
   } catch (err) {
-    console.error('Error loading descriptions:', err);
-    res.status(500).send("Error loading descriptions");
+    console.error('Database error on GET /admin/descriptions', err);
+    res.status(500).send('Database error');
   }
 });
 
