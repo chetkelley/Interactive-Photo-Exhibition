@@ -63,6 +63,17 @@ app.get('/photo/:id', async (req, res) => {
   }
 });
 
+//admin view so I can see all entries
+app.get('/admin/descriptions', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM description ORDER BY id DESC');
+    res.render('admin_descriptions', { descriptions: result.rows });
+  } catch (err) {
+    console.error('Error loading descriptions:', err);
+    res.status(500).send("Error loading descriptions");
+  }
+});
+
 app.post('/photo/:id', async (req, res) => {
   const photoId = req.params.id;
   let text = req.body.text;

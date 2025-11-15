@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visitor Submissions</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-family: Arial, sans-serif;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
+        th {
+            background: #eee;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Visitor Submissions</h1>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Photo ID</th>
+        <th>Description</th>
+        <th>Created At</th>
+    </tr>
+
+    <% descriptions.forEach(d => { %>
+        <tr>
+            <td><%= d.id %></td>
+            <td><%= d.photo_id %></td>
+            <td><%= d.description %></td>
+            <td><%= d.created_at %></td>
+        </tr>
+    <% }) %>
+</table>
+
+</body>
+</html>
