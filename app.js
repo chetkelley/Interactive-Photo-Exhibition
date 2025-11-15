@@ -67,7 +67,7 @@ app.get('/photo/:id', async (req, res) => {
 app.get('/admin/descriptions', async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT d.id, d.text, d.timestamp, p.title AS photo_title
+      SELECT d.id, d.text AS description, d.timestamp, p.title AS photo_title
       FROM description d
       JOIN photo p ON d.photo_id = p.id
       ORDER BY d.timestamp DESC
