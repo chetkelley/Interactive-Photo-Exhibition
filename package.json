@@ -1,6 +1,6 @@
 {
   "name": "photo-exhibit-app",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Interactive Photo Exhibition app with PostgreSQL and session storage",
   "main": "app.js",
   "scripts": {

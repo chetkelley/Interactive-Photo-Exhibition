@@ -70,7 +70,7 @@ app.get('/admin/descriptions', async (req, res) => {
       SELECT d.id, d.text AS description, d.timestamp AS created_at, p.title AS photo_title
       FROM description d
       JOIN photo p ON d.photo_id = p.id
-      ORDER BY d.timestamp DESC
+      ORDER BY photo_title ASC
     `);
 
     const descriptions = result.rows;
