@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Describe This Photo</title>
+  <style>
+    body {
+      font-size: 1.8em;
+      font-family: sans-serif;
+      max-width: 700px;
+      margin: 2em auto;
+      padding: 1em;
+      line-height: 1.5;
+    }
+
+    textarea {
+      border: 2px solid #333;
+      border-radius: 4px;
+      font-size: 2.0em;
+      padding: 0.75em;
+      width: 100%;
+      height: 180px;
+      box-sizing: border-box;
+      resize: vertical;
+    }
+
+    button {
+      font-size: 1.5em;
+      padding: 0.5em 1.0em;
+      margin-top: 1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>What do you see in this Photo?</h1>
+  <form method="POST">
+    <textarea name="text" placeholder="enter text here..." required></textarea>
+    <br>
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>

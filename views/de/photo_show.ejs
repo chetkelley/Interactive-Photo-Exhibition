@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title><%= photo.title %></title>
+  <style>
+    body {
+      font-size: 1.5em;
+      font-family: sans-serif;
+      max-width: 800px;
+      margin: 2em auto;
+      padding: 1em;
+      line-height: 1.6;
+    }
+
+    h1 {
+      font-size: 2.8em;
+      margin-bottom: 0.5em;
+    }
+
+    ul {
+      padding-left: 1.2em;
+    }
+
+    li {
+      font-size: 1.8em;
+      margin-bottom: 0.75em;
+    }
+
+    strong {
+      font-size: 2em;
+      display: block;
+      margin-top: 1.5em;
+    }
+  </style>
+</head>
+<body>
+  <h1><%= photo.title %></h1>
+
+  <strong>Bisherige Beschreibungen:</strong>
+  <ul>
+    <% descriptions.forEach(desc => { %>
+      <li><%= desc.text %></li>
+    <% }) %>
+  </ul>
+</body>
+</html>
