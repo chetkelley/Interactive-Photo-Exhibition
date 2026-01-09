@@ -9,6 +9,12 @@ const sanitizeHtml = require('sanitize-html');
 
 const app = express();
 
+app.use((req, res, next) => {
+  const langHeader = req.headers['accept-language'] || '';
+  req.lang = langHeader.startsWith('en') ? 'en' : 'de';
+  next();
+});
+
 app.get('/', (req, res) => {
   res.status(200).send('Interactive Photo Exhibition app is running.');
 });
@@ -53,9 +59,9 @@ app.get('/photo/:id', async (req, res) => {
       );
       const userDesc = req.session[submittedKey];
       const otherDescs = descResult.rows.filter(d => d.text !== userDesc);
-      res.render('photo_show', { photo, descriptions: [{ text: userDesc }, ...otherDescs] });
+      res.render(`${req.lang}/photo_show`, { photo, descriptions: [{ text: userDesc }, ...otherDescs] });
     } else {
-      res.render('photo_form', { photo });
+      res.render(`${req.lang}/photo_form`, { photo });
     }
   } catch (err) {
     console.error(err);
@@ -74,7 +80,7 @@ app.get('/admin/descriptions', async (req, res) => {
     `);
 
     const descriptions = result.rows;
-    res.render('admin_descriptions', { descriptions });
+    res.render(`${req.lang}/admin_descriptions`, { descriptions });
   } catch (err) {
     console.error('Database error on GET /admin/descriptions', err);
     res.status(500).send('Database error');
