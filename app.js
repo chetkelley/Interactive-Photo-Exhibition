@@ -94,10 +94,10 @@ app.get('/admin/descriptions.csv', async (req, res) => {
         d.id,
         p.title AS photo_title,
         d.text AS description,
-        d.created_at
+        d.timestamp
       FROM description d
       JOIN photo p ON d.photo_id = p.id
-      ORDER BY d.created_at DESC
+      ORDER BY d.timestamp DESC
     `);
 
     // CSV header
@@ -109,7 +109,7 @@ app.get('/admin/descriptions.csv', async (req, res) => {
         row.id,
         `"${row.photo_title.replace(/"/g, '""')}"`,
         `"${row.description.replace(/"/g, '""')}"`,
-        row.created_at
+        row.timestamp
       ].join(',') + '\n';
     }
 
