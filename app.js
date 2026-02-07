@@ -86,7 +86,45 @@ app.get('/admin/descriptions', async (req, res) => {
     res.status(500).send('Database error');
   }
 });
+//download csv file with all entries
+app.get('/admin/descriptions.csv', async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT
+        d.id,
+        p.title AS photo_title,
+        d.text AS description,
+        d.created_at
+      FROM description d
+      JOIN photo p ON d.photo_id = p.id
+      ORDER BY d.created_at DESC
+    `);
 
+    // CSV header
+    let csv = 'ID,Photo Title,Description,Created At\n';
+
+    // Rows
+    for (const row of result.rows) {
+      csv += [
+        row.id,
+        `"${row.photo_title.replace(/"/g, '""')}"`,
+        `"${row.description.replace(/"/g, '""')}"`,
+        row.created_at
+      ].join(',') + '\n';
+    }
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader(
+      'Content-Disposition',
+      'attachment; filename="photo_descriptions.csv"'
+    );
+
+    res.send(csv);
+  } catch (err) {
+    console.error('CSV export failed', err);
+    res.status(500).send('Failed to export CSV');
+  }
+});
 app.post('/photo/:id', async (req, res) => {
   const photoId = req.params.id;
   let text = req.body.text;
